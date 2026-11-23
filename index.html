@@ -1846,28 +1846,28 @@ async function runDemo(){
   await cine([[205,34,150],[150,46,140],[100,40,128]],[[110,6,90],[90,4,80],[76,3,96]],2600);
   // ---------- TITLE ----------
   const cs=[...document.querySelectorAll('#cine div')];cs[0].textContent='WELCOME TO SUNSET CITY';cs.forEach(x=>x.classList.add('on'));
-  await cine([[100,40,128],[78,8,108]],[[76,3,96],[75,2,96]],3400);
+  await cine([[100,40,128],[78,8,108]],[[76,3,96],[75,2,96]],2600);
   cs.forEach(x=>x.classList.remove('on'));bars(false);AU.phoneRadio=false;marks(true);
   // ---------- PORTFOLIO ----------
   setTime(18.35,0);P.x=750;P.y=1010;P.ang=-Math.PI/2;yaw=0;pitch=.36;camMode=0;$('hud').classList.remove('hidden');sizeMini();DEMO.boost=false;
-  $('welcome').classList.remove('hidden');demoCaption('Everything about me','lives Downtown');await sleep(3600);$('welcome').classList.add('hidden');
-  await walkTo(750,962);await sleep(500);
+  $('welcome').classList.remove('hidden');demoCaption('Everything about me','lives Downtown');await sleep(2000);$('welcome').classList.add('hidden');
+  await walkTo(750,962);await sleep(150);
   const pb=$('pBody'),tab=id=>document.querySelector('#pTabs [data-s="'+id+'"]').click(),toEl=async(id,ms=900)=>{const el=$(id);if(!el)return;const t=pb.scrollTop+el.getBoundingClientRect().top-pb.getBoundingClientRect().top-10,s0=pb.scrollTop;await animate(k=>{pb.scrollTop=s0+(t-s0)*k},ms)};
-  openLoc('about');demoCaption('About me','AI & Data Engineer · GenAI · RAG · Agents');await sleep(3800);
-  tab('experience');demoCaption('Now: AI Engineer at RightAnswers','GraphRAG over private knowledge graphs');await sleep(800);await toEl('role-ra',700);$('role-ra').classList.add('focus');await sleep(3800);
-  await animate(k=>{pb.scrollTop+=2.2},1400);
-  demoCaption('Lead Engineer · Best Employee','iplairani.com · RAG, Snowflake, Databricks, AWS');await toEl('role-ip',900);$('role-ip').classList.add('focus');await sleep(3600);
-  tab('projects');demoCaption('9 featured projects','agents · RAG · evals · vision');await sleep(3200);await animate(k=>{pb.scrollTop=k*520},1500);await sleep(1600);
-  tab('publications');demoCaption('Research','two IEEE papers in 2025');await sleep(2600);
-  tab('skills');demoCaption('Skills','AI/ML · data · cloud · backend');await sleep(2400);
-  tab('contact');demoCaption("Let's talk",'email · LinkedIn · GitHub');await sleep(2200);
-  closeModals();await sleep(1800);
+  openLoc('about');demoCaption('About me','AI & Data Engineer · GenAI · RAG · Agents');await sleep(2300);
+  tab('experience');demoCaption('Now: AI Engineer at RightAnswers','GraphRAG over private knowledge graphs');await sleep(300);await toEl('role-ra',500);$('role-ra').classList.add('focus');await sleep(2500);
+  await animate(k=>{pb.scrollTop+=2.6},500);
+  demoCaption('Lead Engineer · Best Employee','iplairani.com · RAG, Snowflake, Databricks, AWS');await toEl('role-ip',600);$('role-ip').classList.add('focus');await sleep(2300);
+  tab('projects');demoCaption('9 featured projects','agents · RAG · evals · vision');await sleep(1800);await animate(k=>{pb.scrollTop=k*520},1100);await sleep(700);
+  tab('publications');demoCaption('Research','two IEEE papers in 2025');await sleep(1700);
+  tab('skills');demoCaption('Skills','AI/ML · data · cloud · backend');await sleep(1500);
+  tab('contact');demoCaption("Let's talk",'email · LinkedIn · GitHub');await sleep(1500);
+  closeModals();await sleep(600);
   // ---------- GUIDANCE + TALK ----------
   demoCaption('Follow the marker','every glowing building is part of my work');
-  P.x=1150;P.y=1015;yaw=.4;await sleep(300);await walkTo(1340,990);await sleep(900);
-  askMe();demoCaption('Ask me anything','a conversation, right in the game');await sleep(1500);document.querySelectorAll('#dlg .dlg-c > *')[1].click();await sleep(4600);window.PF.dialog.close();
+  P.x=1150;P.y=1015;yaw=.4;await sleep(300);await walkTo(1340,990);await sleep(250);
+  askMe();demoCaption('Ask me anything','a conversation, right in the game');await sleep(1000);document.querySelectorAll('#dlg .dlg-c > *')[1].click();await sleep(3300);window.PF.dialog.close();
   const local=npcs.find(n=>n.kind==='chat'&&n.x>0&&n.x<2000&&n.y>0&&n.y<1800)||npcs[0];P.x=local.x+26;P.y=local.y+10;nearNpc=local;await sleep(300);
-  talkNearest();demoCaption('Locals point the way','and gossip about my RAG pipelines');await sleep(1600);document.querySelectorAll('#dlg .dlg-c > *')[0].click();await sleep(3400);window.PF.dialog.close();
+  talkNearest();demoCaption('Locals point the way','and gossip about my RAG pipelines');await sleep(1000);document.querySelectorAll('#dlg .dlg-c > *')[0].click();await sleep(2500);window.PF.dialog.close();
   // ---------- CITY IN DAYLIGHT ----------
   await cut(()=>{setTime(15.8,0);openMap();demoCaption('One city, five districts','the map shows what each one has')});await sleep(3200);closeModals();
   await cut(()=>{ride(bk,330,456,Math.PI);camMode=1;setStation(0,true);DEMO.boost=true;DEMO.route=[[-300,456],[-1000,456],[-1700,456]];demoCaption('Ride through Palm Hills','bikes, supercars, jet skis')});
