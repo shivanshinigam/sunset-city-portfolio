@@ -303,6 +303,8 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {BokehPass} from 'three/addons/postprocessing/BokehPass.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {clone as skClone} from 'three/addons/utils/SkeletonUtils.js';
 
 const {SECTIONS,ORDER,EMAIL,GH,LI}=window.PF;
 const $=id=>document.getElementById(id);
@@ -818,9 +820,10 @@ function makePerson(p){
   if(p.phone){const ph=M(PG.phone,'#111',arms[1].el,.05,-.32,0,false);ph.rotation.z=.3}
   const k=p.h||1;g.scale.set(k,k,k);
   scene.add(g);p.mv=p.mv||0;p.seed=p.seed||Math.random()*10;p.look=0;
-  return Object.assign(p,{g,rig:{body,hips,spine,head,legs,arms}});
+  const rp=Object.assign(p,{g,rig:{body,hips,spine,head,legs,arms}});if(XB&&XB.ready)xbUpgrade(rp);return rp;
 }
 function posePerson(p,dt){
+  if(p.xb){poseXb(p,dt);return}
   p.g.position.set(p.x*S,onPier(p.x,p.y)?1.05:0,p.y*S);p.g.rotation.y=-p.ang;
   const R=p.rig;p.mv+=((p.moving?1:0)-p.mv)*Math.min(1,dt*6);
   // head turns to look at the player when close
@@ -1870,6 +1873,94 @@ async function runDemo(){
   const blob=new Blob(chunks,{type:'audio/webm'});const buf=await blob.arrayBuffer();let bin='';const u8=new Uint8Array(buf);for(let i=0;i<u8.length;i+=8192)bin+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));
   Object.assign(window.__demo,{audio:btoa(bin),log:DEMO.log,endEpoch:Date.now(),done:true});
 }
+
+/* =====================================================================
+   ANIMATED CHARACTERS — motion-captured rig (Mixamo "X Bot" from the three.js examples),
+   each person gets their own clothes painted on by a small shader
+   ===================================================================== */
+var XB={ready:false,base:null,clips:{},bmin:new THREE.Vector3(),bmax:new THREE.Vector3(),scale:1};
+const _bn=n=>n.replace(/[:.]/g,'');
+function loadXbot(){
+  return new Promise(res=>{
+    const sc=document.createElement('script');sc.src='assets/xbot.js';
+    sc.onload=()=>{try{
+      const bin=atob(window.XBOT_B64),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);window.XBOT_B64=null;
+      new GLTFLoader().parse(u8.buffer,'',g=>{
+        XB.base=g.scene;for(const c of g.animations)XB.clips[c.name]=c;
+        for(const n of ['agree','headShake'])if(XB.clips[n])THREE.AnimationUtils.makeClipAdditive(XB.clips[n]);
+        let geo=null;g.scene.traverse(o=>{if(o.isSkinnedMesh&&(!geo||o.geometry.attributes.position.count>geo.attributes.position.count))geo=o.geometry});
+        geo.computeBoundingBox();XB.bmin.copy(geo.boundingBox.min);XB.bmax.copy(geo.boundingBox.max);
+        g.scene.updateMatrixWorld(true);let hy=0;g.scene.traverse(o=>{if(o.isBone&&/Head$/.test(_bn(o.name))){const v=new THREE.Vector3();o.getWorldPosition(v);hy=v.y}});XB.scale=hy>0?1.6/hy:1;
+        XB.ready=true;res(true)},()=>res(false));
+    }catch(e){console.warn(e);res(false)}};
+    sc.onerror=()=>res(false);document.head.appendChild(sc);
+  });
+}
+function clothesMat(base,p,joints){
+  const m=new THREE.MeshStandardMaterial({color:'#ffffff',roughness:.7,metalness:.05});
+  const u={uShirt:{value:new THREE.Color(p.shirt)},uPants:{value:new THREE.Color(p.style==='dress'?p.shirt:p.pants)},uSkin:{value:new THREE.Color(p.skin)},uShoes:{value:new THREE.Color(p.shoes||'#222')},
+    uMin:{value:XB.bmin},uMax:{value:XB.bmax},uShorts:{value:p.style==='shorts'?1:0},uDress:{value:p.style==='dress'?1:0},uSleeve:{value:p.longSleeve?.92:.5},uJoint:{value:joints?1:0}};
+  m.onBeforeCompile=sh=>{Object.assign(sh.uniforms,u);
+    sh.vertexShader='varying vec3 vBind;\n'+sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvBind=position;');
+    sh.fragmentShader='varying vec3 vBind;uniform vec3 uShirt,uPants,uSkin,uShoes,uMin,uMax;uniform float uShorts,uDress,uSleeve,uJoint;\n'+sh.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+      vec3 nb=(vBind-uMin)/(uMax-uMin);float y=nb.y;float ax=abs(nb.x-.5)*2.;
+      vec3 col=uShirt;
+      if(y<.045)col=uShoes;else if(y<(uDress>.5?.36:.5))col=uPants;
+      if(uShorts>.5&&y>.045&&y<.3)col=uSkin;
+      if(uDress>.5&&y>.045&&y<.3)col=uSkin;
+      if(ax>uSleeve&&y>.55)col=uSkin;
+      if(y>.835)col=uSkin;
+      if(uJoint>.5)col*=.55;
+      diffuseColor.rgb=col;`)};
+  m.customProgramCacheKey=()=>'xbotClothes';
+  return m;
+}
+function xbUpgrade(p){
+  if(p.xb||!XB.ready)return;
+  const model=skClone(XB.base);model.scale.setScalar(XB.scale);model.rotation.y=Math.PI/2;
+  const bones={};
+  model.traverse(o=>{if(o.isBone)bones[_bn(o.name)]=o;if(o.isSkinnedMesh){o.material=clothesMat(o.material,p,/joint/i.test(o.material.name||''));o.castShadow=true;o.frustumCulled=false}});
+  p.rig.body.visible=false;p.g.add(model);
+  // hair on the head bone
+  const head=bones.mixamorigHead;
+  if(head&&p.hairStyle!=='bald'){p.g.updateMatrixWorld(true);const ws=new THREE.Vector3();head.getWorldScale(ws);const gs=p.g.scale.x;
+    const hg=new THREE.Group();hg.scale.setScalar(.8*gs/ws.x);hg.position.y=.1*gs/ws.x;hg.position.z=.01*gs/ws.x;head.add(hg);
+    const M=(geo,x,y,z,rz=0)=>{const m=new THREE.Mesh(geo,mat(p.hairStyle==='cap'?p.capCol:p.hair,{roughness:.8}));m.position.set(x,y,z);m.rotation.x=rz;m.castShadow=true;hg.add(m);return m};
+    if(p.hairStyle==='cap'){M(PG.capTop,0,.02,0);M(PG.brim,0,.05,.17).rotation.y=Math.PI/2}
+    else{const c=M(PG.hairCap,0,.03,-.02);c.rotation.x=-.38;
+      if(p.hairStyle==='long'){const t=M(PG.hairLong,0,-.2,-.12);t.scale.set(1.15,1,.8);t.rotation.x=.15}
+      if(p.hairStyle==='bun')M(PG.bun,0,.14,-.15)}
+  }
+  if(head){p.g.updateMatrixWorld(true);const ws=new THREE.Vector3();head.getWorldScale(ws);const gs=p.g.scale.x,k=gs/ws.x;
+    const fg=new THREE.Group();fg.scale.setScalar(k);head.add(fg);
+    const F=(geo,col,x,y,z,sx=1,sy=1,sz=1,basic)=>{const m=new THREE.Mesh(geo,basic?new THREE.MeshBasicMaterial({color:col}):mat(col,{roughness:.5}));m.position.set(x,y,z);m.scale.set(sx,sy,sz);fg.add(m);return m};
+    const eyeW=new THREE.SphereGeometry(.028,10,8),iris=new THREE.SphereGeometry(.016,8,6),Z=.128;
+    for(const x of [-.044,.044]){F(eyeW,'#d9d3cc',x,.1,Z,1,.72,.45);F(iris,'#20140e',x,.099,Z+.011,1,1,.5);
+      const br=F(new THREE.BoxGeometry(.048,.009,.012),p.hair||'#2a1a10',x,.135,Z+.004,1,1,1,true);br.rotation.z=x<0?.12:-.12}
+    F(new THREE.ConeGeometry(.017,.05,6),p.skin,0,.072,Z+.012,1,1,1).rotation.x=Math.PI/2+.25;
+    F(new THREE.SphereGeometry(.026,12,8),'#a8434f',0,.034,Z-.006,1.15,.38,.45);
+    if(p.style==='dress'||p.hairStyle==='long'||p===P)for(const x of [-.055,.055])F(new THREE.SphereGeometry(.018,8,6),'#e07a8c',x,.062,Z-.012,1,.6,.3);
+  }
+  const mixer=new THREE.AnimationMixer(model),act={};
+  for(const n of ['idle','walk','run']){const a=mixer.clipAction(XB.clips[n]);a.play();a.setEffectiveWeight(n==='idle'?1:0);a.time=Math.random()*XB.clips[n].duration;act[n]=a}
+  if(p.kind==='chat')for(const n of ['agree','headShake']){const a=mixer.clipAction(XB.clips[n]);a.play();a.setEffectiveWeight(0);act[n]=a}
+  p.xb={model,mixer,act,bones};
+  if(p.sit)model.position.y=-.42;
+}
+function poseXb(p,dt){
+  p.g.position.set(p.x*S,onPier(p.x,p.y)?1.05:0,p.y*S);p.g.rotation.y=-p.ang;
+  p.mv+=((p.moving?1:0)-p.mv)*Math.min(1,dt*6);
+  const A=p.xb.act,mv=p.sit?0:p.mv,runner=p===P||p.jog;
+  A.idle.setEffectiveWeight(1-mv);A.walk.setEffectiveWeight(runner?0:mv);A.run.setEffectiveWeight(runner?mv:0);
+  if(p===P)A.run.timeScale=keys.has('shift')?1.45:1.12;else{A.walk.timeScale=clamp((p.sp||40)/36,.6,1.5);A.run.timeScale=.95}
+  if(A.agree){const tk=p.talking?1:0;p._tk=(p._tk||0)+(tk-(p._tk||0))*Math.min(1,dt*3);A.agree.setEffectiveWeight(p._tk*(Math.sin(T*.7+p.seed)>0?1:0));A.headShake.setEffectiveWeight(p._tk*(Math.sin(T*.7+p.seed)>0?0:.8))}
+  p.xb.mixer.update(dt);
+  const b=p.xb.bones;
+  if(p.sit&&b.mixamorigLeftUpLeg){for(const s of ['Left','Right']){b['mixamorig'+s+'UpLeg'].rotation.x=-1.5;b['mixamorig'+s+'Leg'].rotation.x=1.55}if(b.mixamorigSpine)b.mixamorigSpine.rotation.x=-.08}
+  if(p.phone&&!p.sit&&b.mixamorigRightArm){b.mixamorigRightArm.rotation.x+=.9;b.mixamorigRightForeArm.rotation.z+=1.2}
+  let look=0;if(p!==P&&!drive){const d=Math.hypot(P.x-p.x,P.y-p.y);if(d<75){const diff=((Math.atan2(P.y-p.y,P.x-p.x)-p.ang+Math.PI)%TAU+TAU)%TAU-Math.PI;if(Math.abs(diff)<2)look=clamp(-diff,-1,1)}}
+  p.look=(p.look||0)+(look-(p.look||0))*Math.min(1,dt*4);if(b.mixamorigHead)b.mixamorigHead.rotation.y+=p.look*.9;
+}
 buildPhone();
 $('phoneBtn').onclick=togglePhone;
 $('wPf').onclick=()=>{$('welcome').classList.add('hidden');openPortfolio()};
@@ -1904,8 +1995,9 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+loadXbot().then(ok=>{if(ok){for(const n of npcs)xbUpgrade(n);xbUpgrade(P)}window.__xbReady=ok});
 if(location.hash==='#demo')runDemo();
-window.__g={P,get mode(){return mode},cars,renderer};
+window.__THREE=THREE;window.__g={get npcs(){return npcs},get benches(){return benches},setCam:(x,y,yw,p,z,m)=>{P.x=x;P.y=y;yaw=yw;pitch=p;zoomU=z;camMode=m},P,get mode(){return mode},cars,renderer};
 </script>
 </body>
 </html>
