@@ -164,6 +164,39 @@ button{font:inherit;cursor:pointer}a{color:var(--teal)}
 #mhud{position:absolute;left:50%;top:116px;transform:translateX(-50%);text-align:center;padding:8px 18px;border-radius:12px;background:rgba(15,8,32,.85);border:1px solid var(--c);pointer-events:none;min-width:200px;box-shadow:0 0 24px color-mix(in srgb,var(--c) 40%,transparent)}
 #mhud .mh-t{font:700 11px "JetBrains Mono";letter-spacing:.18em;color:var(--c)}#mhud .mh-p{font-family:Anton;font-size:30px;line-height:1.1}
 #mhud .mh-c{font-family:Anton;font-size:22px}#mhud .mh-c.low{color:#ff3355}#mhud .mh-x{font:700 10px "JetBrains Mono";color:#b9a8d6}
+#demoCap{position:fixed;left:44px;bottom:230px;z-index:28;pointer-events:none;opacity:0}
+#demoCap.show{animation:dcap 4.4s ease forwards}
+#demoCap b{display:block;font-family:Anton;font-weight:400;font-size:56px;line-height:1.05;color:#fff;text-shadow:3px 3px 0 #ff3d8b,6px 6px 0 #2a0f5c}
+#demoCap i{font-family:Yellowtail;font-style:normal;font-size:36px;color:#ffd1e6;text-shadow:2px 2px 0 #000}
+@keyframes dcap{0%{opacity:0;transform:translateX(-30px)}10%{opacity:1;transform:none}82%{opacity:1}100%{opacity:0}}
+body.demo #hint{display:none!important}body.demo canvas{cursor:none}
+#mapModal .card{width:min(1100px,100%)}
+#cityMapWrap{position:relative}#cityMap{display:block;width:100%;border-radius:12px;cursor:pointer;background:#2d2450}
+.body h3.mt{margin:18px 0 10px;font-size:22px}
+.districts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.districts button{text-align:left;padding:12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-left:4px solid var(--c);color:#fff;font-size:13px;line-height:1.45}
+.districts button:hover{background:rgba(255,255,255,.1)}.districts b{display:block;font-family:Anton;font-weight:400;font-size:20px;letter-spacing:.02em}
+.districts small{display:block;color:#b9a8d6;font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:.12em;margin-bottom:4px}
+#welcome{position:absolute;left:18px;top:120px;width:330px;padding:16px 18px;border-radius:14px;background:rgba(15,8,32,.9);border:1px solid rgba(255,255,255,.15);border-left:4px solid #ffd23f;box-shadow:0 12px 30px rgba(0,0,0,.4);animation:lcin .4s ease}
+#welcome h4{font-family:Anton;font-weight:400;font-size:24px;margin-bottom:6px}#welcome p{font-size:13px;color:#eadcff;margin-bottom:8px}
+#welcome ul{margin:0 0 10px 18px;font-size:13px;line-height:1.55;color:#eadcff}#welcome li b{color:#fff}
+#welcome .wbtns{display:flex;gap:8px}#welcome button{font:700 12px "JetBrains Mono";padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+#welcome .go{background:#ffd23f;color:#1a1030}#welcome .x{background:rgba(255,255,255,.1);color:#fff}
+@media(max-width:700px){#welcome{top:auto;bottom:140px;left:10px;right:10px;width:auto}}
+#title .tl{max-width:560px;margin:14px auto 0;font-size:15px;color:#ffe9f4;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
+.chipbtn.hl{background:linear-gradient(90deg,#ff3d8b,#ff8a3d);border:0;box-shadow:0 0 18px rgba(255,61,139,.5)}
+#moreMenu{position:absolute;top:44px;left:0;display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:12px;background:rgba(15,8,32,.94);border:1px solid rgba(255,255,255,.15);min-width:250px;z-index:5}
+#moreMenu .chipbtn{text-align:left}#moreMenu .zr{display:flex;gap:6px}#moreMenu .zr .chipbtn{flex:1;text-align:center}
+.topbtns{position:absolute}
+#obj{position:absolute;top:122px;right:16px;max-width:300px;text-align:right;font-size:13px;line-height:1.45;padding:8px 12px;border-radius:10px;background:rgba(15,8,32,.75);pointer-events:none}
+#obj:empty{display:none}#obj b{display:block;font:700 11px "JetBrains Mono";letter-spacing:.12em;color:#ff9ad0}
+#wp{position:fixed;left:0;top:0;z-index:9;width:120px;text-align:center;pointer-events:none}
+#wp .wp-a{width:0;height:0;margin:0 auto 4px;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:16px solid var(--c);filter:drop-shadow(0 0 6px var(--c));font-size:0}
+#wp .wp-l{display:inline-block;font:700 11px "JetBrains Mono";letter-spacing:.08em;color:#fff;background:rgba(15,8,32,.85);border:1px solid var(--c);border-radius:6px;padding:3px 7px;white-space:nowrap}
+#welcome ol{margin:0 0 8px 18px;font-size:13px;line-height:1.55;color:#eadcff}#welcome ol li{margin-bottom:4px}#welcome ol b{color:#fff}
+#welcome .keys{font:700 11px "JetBrains Mono";color:#ffd166;margin:4px 0 10px}
+#welcome{width:360px}
+@media(max-width:700px){#obj{top:auto;bottom:150px;right:10px;max-width:60vw;font-size:12px}}
 </style>
 </head>
 <body>
@@ -173,9 +206,10 @@ button{font:inherit;cursor:pointer}a{color:var(--teal)}
   <div class="kicker">SUNSET CITY · 3D BETA</div>
   <h1>SHIVANSHI<br>NIGAM</h1>
   <div class="sub">AI &amp; Data Engineer</div>
+  <p class="tl">My portfolio is an explorable city. Walk into the glowing buildings downtown to see my work, or skip straight to it.</p>
   <div class="btns">
     <button class="bigbtn" id="playBtn" disabled>LOADING 3D…</button>
-    <button class="ghostbtn" id="cvBtn0">Résumé view</button>
+    <button class="ghostbtn" id="cvBtn0">📂 Just show me the portfolio</button>
     <a class="ghostbtn" href="2d.html">2D version</a>
   </div>
   <div class="keys">WASD MOVE · ARROWS OR 2-FINGER SWIPE TURN · PINCH / SCROLL ZOOM · V VIEW · E ENTER · T TALK · F CAR</div>
@@ -184,18 +218,29 @@ button{font:inherit;cursor:pointer}a{color:var(--teal)}
 <div id="hud" class="hidden">
   <div class="brand"><b>SHIVANSHI NIGAM</b><small>AI &amp; DATA ENGINEER</small></div>
   <div class="topbtns">
-    <button class="chipbtn" id="mapBtn">🗺 TRAVEL · M</button>
-    <button class="chipbtn" id="cvBtn">📄 RÉSUMÉ · R</button>
+    <button class="chipbtn hl" id="pfBtn">📂 MY PORTFOLIO · R</button>
+    <button class="chipbtn" id="mapBtn">🗺 MAP · M</button>
     <button class="chipbtn" id="askBtn">💬 ASK ME · C</button>
-    <button class="chipbtn" id="phoneBtn">📱 PHONE · P</button>
-    <button class="chipbtn" id="muteBtn">🔊 SOUND · N</button>
-    <button class="chipbtn" id="camBtn">🎥 VIEW · V</button>
-    <button class="chipbtn" id="zinBtn" aria-label="Zoom in">＋</button>
-    <button class="chipbtn" id="zoutBtn" aria-label="Zoom out">－</button>
-    <a class="chipbtn" href="2d.html">2D VERSION</a>
+    <button class="chipbtn" id="moreBtn">☰ MORE</button>
+    <div id="moreMenu" class="hidden">
+      <button class="chipbtn" id="helpBtn">❓ HELP · HOW TO PLAY</button>
+      <button class="chipbtn" id="cvBtn">📄 RÉSUMÉ VIEW (NO GAME)</button>
+      <button class="chipbtn" id="phoneBtn">📱 PHONE · P</button>
+      <button class="chipbtn" id="muteBtn">🔊 SOUND · N</button>
+      <button class="chipbtn" id="camBtn">🎥 CAMERA VIEW · V</button>
+      <div class="zr"><button class="chipbtn" id="zinBtn" aria-label="Zoom in">＋ ZOOM IN</button><button class="chipbtn" id="zoutBtn" aria-label="Zoom out">－ ZOOM OUT</button></div>
+      <a class="chipbtn" href="2d.html">2D VERSION</a>
+    </div>
   </div>
+  <div id="obj"></div>
+  <div id="wp" class="hidden"><div class="wp-a">▲</div><div class="wp-l"></div></div>
   <div id="locCard" class="hidden"></div>
   <div id="mhud" class="hidden"></div>
+  <div id="welcome" class="hidden"><h4>Hi, I'm Shivanshi 👋</h4>
+  <p>This city is my portfolio. <b>Everything about me is in Downtown</b>: each glowing building holds part of my work (experience, projects, skills, research, contact).</p>
+  <ol><li><b>Follow the pink marker</b> to the next building and walk into its ring.</li><li>Or skip the walking: <b>📂 My Portfolio</b> (R) shows it all at once.</li><li><b>Bonus:</b> 4 districts with mini-missions, cars, bikes and jet skis. Open the <b>Map</b> (M).</li></ol>
+  <p class="keys">WASD move · Mouse/arrows look · E enter · F vehicle · C ask me</p>
+  <div class="wbtns"><button class="go" id="wPf">📂 Read my portfolio</button><button class="x" id="wX">▶ Explore the city</button></div></div>
   <div class="stats"><div id="clock">18:20</div><div id="xp">XP 000000</div><div class="status"><span id="wx">☀ CLEAR</span></div></div>
   <canvas id="mini"></canvas>
   <div id="prompt" class="hidden"></div>
@@ -220,12 +265,13 @@ button{font:inherit;cursor:pointer}a{color:var(--teal)}
 </div>
 <div id="photoFrame" class="hidden"><b>SHIVANSHI NIGAM</b><i>AI &amp; Data Engineer · Sunset City</i></div>
 <div id="shotFlash"></div>
+<div id="demoCap"><b></b><i></i></div>
 <div id="panel" class="modal hidden"><div class="card" id="panelCard">
   <header><small id="pLabel"></small><h2 id="pTitle"></h2><button class="closebtn" data-close aria-label="Close">✕</button></header>
   <nav class="tabs" id="pTabs"></nav><div class="body" id="pBody"></div></div></div>
 <div id="mapModal" class="modal hidden"><div class="card" style="--c:#ffd166">
-  <header><small>FAST TRAVEL</small><h2>WHERE TO?</h2><button class="closebtn" data-close aria-label="Close">✕</button></header>
-  <div class="body"><div class="travel" id="travelList"></div></div></div></div>
+  <header><small>SUNSET CITY · TAP ANYWHERE TO TRAVEL</small><h2>CITY MAP</h2><button class="closebtn" data-close aria-label="Close">✕</button></header>
+  <div class="body"><div id="cityMapWrap"><canvas id="cityMap"></canvas></div><h3 class="mt">Districts</h3><div class="districts" id="distList"></div><h3 class="mt">Portfolio buildings · Downtown</h3><div class="travel" id="travelList"></div></div></div></div>
 <div id="classic" class="modal classic hidden"><div class="card" style="--c:#7b2ff7">
   <header><small>NO-GAME MODE</small><h2>RÉSUMÉ VIEW</h2><button class="closebtn" data-close aria-label="Close">✕</button></header>
   <div class="body" id="classicBody"></div></div></div>
@@ -526,6 +572,20 @@ function buildOuterGround(){
   const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({map:tex,roughness:.92}));m.receiveShadow=true;scene.add(m);
   for(const p of ponds){const pd=new THREE.Mesh(new THREE.CircleGeometry(p.r*S,40).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({color:'#2fb3cf',roughness:.1,metalness:.2}));pd.position.copy(at(p.x,p.y,.06));scene.add(pd);
     const rim=new THREE.Mesh(new THREE.RingGeometry(p.r*S,p.r*S+.8,40).rotateX(-Math.PI/2),mat('#e8d7e8'));rim.position.copy(at(p.x,p.y,.07));scene.add(rim)}
+}
+function buildRoadSigns(){
+  const mk=(txt,sub,col,x,y,rot)=>{const cv=document.createElement('canvas');cv.width=768;cv.height=256;const c=cv.getContext('2d');
+    c.fillStyle='#0f6b3a';c.fillRect(0,0,768,256);c.strokeStyle='#fff';c.lineWidth=10;c.strokeRect(12,12,744,232);
+    c.fillStyle='#fff';c.font='96px Anton';c.textAlign='center';c.textBaseline='middle';c.fillText(txt,384,110);
+    c.font='700 34px "JetBrains Mono"';c.fillStyle=col;c.fillText(sub,384,196);
+    const g=new THREE.Group(),bw=6.6,bh=2.2;const face=new THREE.Mesh(new THREE.PlaneGeometry(bw,bh),new THREE.MeshStandardMaterial({map:canvasTex(cv),roughness:.6,emissive:'#ffffff',emissiveMap:canvasTex(cv),emissiveIntensity:.25}));face.position.y=4.6;g.add(face);
+    const back=new THREE.Mesh(new THREE.BoxGeometry(bw,bh,.1),mat('#3a3f48'));back.position.set(0,4.6,-.07);g.add(back);
+    for(const dx of [-2.4,2.4]){const p=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,4.6,6),mat('#9aa0aa'));p.position.set(dx,2.3,-.1);p.castShadow=true;g.add(p)}
+    g.position.copy(at(x,y));g.rotation.y=rot;scene.add(g)};
+  for(const x of [420,1080,1740]){mk('SUNSET HEIGHTS  ↑','TOWERS · LAKE PARK · 🎮 RALLY','#7dffd0',x+80,40,0);mk('HARBOR DISTRICT  ↓','CONTAINERS · CRANES · 🎮 DATA HUNT','#d8c2ff',x-80,1760,Math.PI)}
+  for(const y of [480,1180]){mk('←  PALM HILLS','SUBURBS · POOLS · 🎮 PAPER ROUTE','#ffe27a',40,y-80,Math.PI/2);mk('SUNSET BEACH  →','PIER · JET SKIS · 🎮 BUOY DASH','#8fe3ff',1990,y+80,-Math.PI/2)}
+  for(const y of [480,1180])mk('DOWNTOWN  →','PORTFOLIO DISTRICT · MY WORK','#ff9ad0',-120,y+80,-Math.PI/2);
+  for(const x of [420,1080,1740]){mk('DOWNTOWN  ↓','PORTFOLIO DISTRICT · MY WORK','#ff9ad0',x-80,-120,Math.PI);mk('DOWNTOWN  ↑','PORTFOLIO DISTRICT · MY WORK','#ff9ad0',x+80,1920,0)}
 }
 function buildMountains(){
   const mm=new THREE.MeshStandardMaterial({color:'#6d4f7a',flatShading:true,roughness:1});
@@ -919,7 +979,9 @@ function loadVoices(){if(!('speechSynthesis' in window))return;const vs=speechSy
 if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
 const PV={get voice(){return VOICE.female},pitch:1.1,rate:1.06};
 const mkVP=()=>({voice:VOICE.list.length?mpick(VOICE.list):null,pitch:.75+Math.random()*.6,rate:.95+Math.random()*.2});
-function voiceSay(text,prof,vol=1,priority=false){
+function voiceSay(){return; /* spoken voices removed — speech stays as on-screen bubbles */
+}
+function _unusedVoice(text,prof,vol=1,priority=false){
   if(!('speechSynthesis' in window)||AU.muted||!AU.ac)return;
   if(speechSynthesis.speaking&&!priority)return;if(priority)speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text.replace(/[^\w\s.,!?'’:-]/g,'').trim());if(!u.text)return;
@@ -970,7 +1032,7 @@ addEventListener('keydown',e=>{
   if(k==='x'&&mission)endMission(false);
   if(k==='f')toggleCar();
   if(k==='m')openMap();
-  if(k==='r')openClassic();
+  if(k==='r')openPortfolio();
   if(k==='t')talkNearest();
   if(k==='k'){openPhoto();return}
   if(k==='q')nextStation();
@@ -1012,6 +1074,7 @@ canvas.addEventListener('pointerup',endPtr);canvas.addEventListener('pointercanc
 function carBlocked(x,y,ang){
   const hx=Math.cos(ang),hy=Math.sin(ang),L=drive.len*.36,B=drive.kind==='jetski'?waterBlocked:blocked;
   for(const [px,py] of [[x,y],[x+hx*L,y+hy*L],[x-hx*L,y-hy*L]])if(B(px,py,11))return 'wall';
+  if(DEMO.noCollide)return null;
   for(const c of cars){const dn=Math.hypot(c.x-x,c.y-y);if(dn<32&&dn<Math.hypot(c.x-drive.x,c.y-drive.y))return c}
   for(const n of npcs){const dn=Math.hypot(n.x-x,n.y-y);if(dn<22&&dn<Math.hypot(n.x-drive.x,n.y-drive.y))return n}
   return null;
@@ -1019,7 +1082,7 @@ function carBlocked(x,y,ang){
 function updateDrive(dt,thr,steer,target){
   const d=drive;
   if(target){const diff=((target.a-d.ang+Math.PI)%TAU+TAU)%TAU-Math.PI;steer=clamp(diff*2.2,-1,1);thr=Math.abs(diff)>2.5?-target.m:target.m}
-  const boost=keys.has('shift'),hand=keys.has(' '),bk=d.kind==='bike'||d.kind==='jetski',js=d.kind==='jetski';
+  const boost=keys.has('shift')||DEMO.boost,hand=keys.has(' ')||DEMO.hand,bk=d.kind==='bike'||d.kind==='jetski',js=d.kind==='jetski';
   let hx=Math.cos(d.ang),hy=Math.sin(d.ang),f=d.vx*hx+d.vy*hy;
   const na=d.ang+steer*dt*(hand?3.4:bk?3.1:2.6)*clamp(f/150,-1,1);d.lean+=((bk?steer*clamp(f/300,0,1)*.55:0)-d.lean)*Math.min(1,dt*6);
   if(carBlocked(d.x,d.y,na)!=='wall')d.ang=na;
@@ -1070,10 +1133,12 @@ function update(dt){
     if(drive){
       let target=null;
       if(joy.active){const m=Math.hypot(joy.x,joy.y);if(m>.2){const wx=fw.x*-joy.y+rt.x*joy.x,wy=fw.y*-joy.y+rt.y*joy.x;target={a:Math.atan2(wy,wx),m}}}
+      if(DEMO.route&&DEMO.route.length){const [x,y]=DEMO.route[0],tx=x-P.x,ty=y-P.y;if(Math.hypot(tx,ty)<50){DEMO.route.shift();if(!DEMO.route.length)DEMO.route=null}else target={a:Math.atan2(ty,tx),m:1}}
       updateDrive(dt,fx,sx,target);
     }else{
       let ix=fx-joy.y,iy=sx+joy.x;let m=Math.hypot(ix,iy);if(m>1){ix/=m;iy/=m;m=1}
-      const dx=fw.x*ix+rt.x*iy,dy=fw.y*ix+rt.y*iy;
+      let dx=fw.x*ix+rt.x*iy,dy=fw.y*ix+rt.y*iy;
+      if(DEMO.target){const tx=DEMO.target[0]-P.x,ty=DEMO.target[1]-P.y,dd=Math.hypot(tx,ty);if(dd<14)DEMO.target=null;else{dx=tx/dd;dy=ty/dd;m=1}}
       const sprint=keys.has('shift')||(joy.active&&m>.95),sp=(sprint?330:190)*m;
       P.moving=m>.08?1:0;
       if(P.moving){P.ang=lerpAngle(P.ang,Math.atan2(dy,dx),1-Math.exp(-dt*12));P.walk+=dt*sp/16;
@@ -1115,7 +1180,7 @@ function update(dt){
     let best=null,bd=48;for(const l of LOCS){const d=Math.hypot(P.x-l.door[0],P.y-l.door[1]);if(d<bd){bd=d;best=l}}nearLoc=best;
     nearNpc=null;if(!drive&&!nearLoc){let nd=45;for(const n of npcs){if(n.kind==='idle')continue;const d=Math.hypot(n.x-P.x,n.y-P.y);if(d<nd){nd=d;nearNpc=n}}}
     nearCar=null;if(!drive){let cd=55;for(const c of cars.concat(parkedCars)){const d=Math.hypot(c.x-P.x,c.y-P.y);if(d<cd){cd=d;nearCar=c}}}
-    updatePrompt();
+    updatePrompt();updateGuide();
     const dd=DISTRICTS.find(d=>P.x>=d.r.x&&P.x<d.r.x+d.r.w&&P.y>=d.r.y&&P.y<d.r.y+d.r.h),dn=dd?dd.n:null;
     if(dn!==district){district=dn;districtT=.8}
     if(districtT>0){districtT-=dt;if(districtT<=0&&district&&district!==shownDistrict){shownDistrict=district;const el=$('district');el.querySelector('.d1').textContent=district;el.querySelector('.d2').textContent=(dd&&dd.sub)||(P.x>=-60&&P.x<COAST&&P.y>=-60&&P.y<1860?'PORTFOLIO DISTRICT':'SUNSET CITY');el.classList.remove('show');void el.offsetWidth;el.classList.add('show')}}
@@ -1130,7 +1195,7 @@ function update(dt){
 
 /* ---------- sync & camera ---------- */
 const camPos=new THREE.Vector3(),camLook=new THREE.Vector3();
-function inBuilding(x,y,h){for(const b of buildings)if(x>b.x-6&&x<b.x+b.w+6&&y>b.y-6&&y<b.y+b.h+6&&h<(b.h3||9)+1)return true;return false}
+function inBuilding(x,y,h){if(h>2.8&&h<7.5)for(const p of palms)if(Math.abs(p.x-x)<28&&Math.abs(p.y-y)<28)return true;for(const b of buildings)if(x>b.x-6&&x<b.x+b.w+6&&y>b.y-6&&y<b.y+b.h+6&&h<(b.h3||9)+1)return true;return false}
 function sync(dt){
   const cx=P.x,cy=P.y,far=(camMode===2?1500:1000)*zoomU;
   for(const n of npcs){const v=Math.abs(n.x-cx)<far&&Math.abs(n.y-cy)<far;n.g.visible=v;if(v)posePerson(n,dt)}
@@ -1145,6 +1210,8 @@ function sync(dt){
   let tx,ty,th,dist,p;
   if(mode==='play'&&(photo.active||!modalOpen())){if(keys.has('arrowleft')){yaw+=dt*2.2;lastLook=T}if(keys.has('arrowright')){yaw-=dt*2.2;lastLook=T}if(keys.has('arrowup')){pitch=clamp(pitch+dt*1.2,.05,1.15);lastLook=T}if(keys.has('arrowdown')){pitch=clamp(pitch-dt*1.2,.05,1.15);lastLook=T}}
   if(photo.active){bokeh.enabled=photo.dof;bokeh.uniforms.focus.value=camera.position.distanceTo(camLook)}
+  if(CINE){cineCam(dt);return}
+  if(DEMO.on&&!drive&&P.moving&&camMode!==3)yaw=lerpAngle(yaw,Math.atan2(-Math.cos(P.ang),-Math.sin(P.ang)),1-Math.exp(-dt*2.5));
   if(mode==='intro'){introCam(dt);return}
   if(mode==='title'){const a=T*.05;tx=1300+Math.cos(a)*800;ty=900+Math.sin(a*1.3)*500;th=40;camPos.set(tx*S+Math.cos(a+1)*70,th,ty*S+Math.sin(a+1)*70);camLook.set(tx*S,0,ty*S);camera.position.lerp(camPos,1-Math.exp(-dt*2));camera.lookAt(camLook);return}
   const spd=drive?Math.hypot(drive.vx,drive.vy):0;
@@ -1233,6 +1300,22 @@ function nextPlace(){const un=LOCS.filter(l=>!visited.has(l.id)),pool=un.length?
 function talkNearest(){if(!nearNpc||drive)return;const n=nearNpc;talkingTo=n;n.pause=1e9;n.moving=0;n.ang=Math.atan2(P.y-n.y,P.x-n.x);P.ang=Math.atan2(n.y-P.y,n.x-P.x);if(document.pointerLockElement)document.exitPointerLock();keys.clear();window.PF.talkNpc({x:n.x,y:n.y,place:nextPlace(),ctx:talkCtx()})}
 function askMe(){if(document.pointerLockElement)document.exitPointerLock();keys.clear();window.PF.talkTo('me',talkCtx())}
 let lastPrompt=null;
+function nextLoc(){if(!visited.has('about'))return LOCS[0];const un=LOCS.filter(l=>!visited.has(l.id));if(!un.length)return null;let b=null,bd=1e9;for(const l of un){const d=Math.hypot(l.door[0]-P.x,l.door[1]-P.y);if(d<bd){bd=d;b=l}}return b}
+let objKey='';const _wv=new THREE.Vector3();
+function updateGuide(){
+  const t=nextLoc(),n=visited.size,N=LOCS.length;
+  const key=n+'|'+(t&&t.id)+'|'+(mission?1:0);
+  if(key!==objKey){objKey=key;$('obj').innerHTML=mission?'':'<b>📂 PORTFOLIO · '+n+'/'+N+' EXPLORED</b>'+(t?'Next: <span style="color:'+t.color+'">'+t.name+'</span> · '+t.sub:'All explored! 🎉 Bonus: districts &amp; missions on the Map (M)')}
+  const wp=$('wp');
+  if(!t||mission||modalOpen()||photo.active||mode!=='play'){wp.classList.add('hidden');return}
+  _wv.set(t.door[0]*S,3.2,t.door[1]*S).project(camera);const behind=_wv.z>1;let x=(_wv.x+1)/2*innerWidth,y=(1-_wv.y)/2*innerHeight;
+  const m=70,on=!behind&&x>m&&x<innerWidth-m&&y>m&&y<innerHeight-m;
+  if(!on){const cx=innerWidth/2,cy=innerHeight/2;let dx=x-cx,dy=y-cy;if(behind){dx=-dx;dy=-dy}const a=Math.atan2(dy,dx),k=Math.min((innerWidth/2-m)/Math.abs(Math.cos(a)||1e-6),(innerHeight/2-m)/Math.abs(Math.sin(a)||1e-6));x=cx+Math.cos(a)*k;y=cy+Math.sin(a)*k;wp.querySelector('.wp-a').style.transform='rotate('+(a+Math.PI/2)+'rad)'}
+  else wp.querySelector('.wp-a').style.transform='rotate(180deg)';
+  const dist=Math.round(Math.hypot(t.door[0]-P.x,t.door[1]-P.y)/10);
+  wp.querySelector('.wp-l').textContent=t.name.toUpperCase()+' · '+dist+'m';wp.style.setProperty('--c',t.color);
+  wp.style.transform='translate('+(x-60)+'px,'+(y-20)+'px)';wp.classList.remove('hidden');
+}
 function updatePrompt(){
   const kb=s=>isTouch?'':'<kbd>'+s+'</kbd>';let h='';
   if(nearMission&&!mission)h=kb('E')+'Start mission: <em>'+nearMission.title+'</em>';
@@ -1262,14 +1345,44 @@ function closeModals(){
 }
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeModals));
 document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
+const DINFO=[
+ {n:'Downtown',sub:'★ START HERE · PORTFOLIO',col:'#ff3d8b',desc:'All my work lives here: experience, projects, skills, research and contact.',to:[750,1010],r:{x:-60,y:-60,w:2120,h:1920}},
+ {n:'Palm Hills',sub:'WEST SIDE',col:'#ffd23f',desc:'Bonus area: suburbs with pools and palm-lined streets.',mission:'Paper Route',to:[-1010,600],r:{x:WX0,y:WY0,w:-60-WX0,h:WY1-WY0}},
+ {n:'Sunset Heights',sub:'NORTH SIDE',col:'#21e6c1',desc:'Bonus area: apartment towers and a lake park.',mission:'Heights Rally',to:[500,-150],r:{x:-60,y:WY0,w:2120,h:-60-WY0}},
+ {n:'Harbor District',sub:'SOUTH SIDE',col:'#b892ff',desc:'Bonus area: warehouses, shipping containers and cranes.',mission:'Training Data Hunt',to:[500,1960],r:{x:-60,y:1860,w:2120,h:WY1-1860}},
+ {n:'Sunset Beach',sub:'EAST COAST',col:'#00b4ff',desc:'Bonus area: boardwalk, pier, yachts and jet skis.',mission:'Buoy Dash',to:[2170,1440],r:{x:BEACH0,y:WY0,w:W-BEACH0,h:WY1-WY0}}];
+function travelTo(x,y){closeModals();closePhone();if(mission)endMission(false);if(drive){stopEngine();if(drive.mesh.userData.glow)drive.mesh.userData.glow.visible=false;if(drive.kind!=='car'&&drive.mesh.userData.meRider)drive.mesh.userData.meRider.visible=false;parkedCars.push({x:drive.x,y:drive.y,ang:drive.ang,len:drive.len,wid:drive.wid,col:drive.col,mesh:drive.mesh,kind:drive.kind});drive=null;P.g.visible=true}
+  P.x=x;P.y=y;P.ang=-Math.PI/2;yaw=0;pitch=.34}
+function drawCityMap(){
+  const cv=$('cityMap'),w=cv.parentElement.clientWidth||900,X0=WX0,Y0=WY0,X1=W+300,k=w/(X1-X0),h=(WY1-Y0)*k,d=Math.min(2,devicePixelRatio||1);
+  cv.width=w*d;cv.height=h*d;cv.style.height=h+'px';const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);
+  c.fillStyle='#1d7fb0';c.fillRect(0,0,w,h);c.drawImage(mini,0,0,mini.width/MS*k,mini.height/MS*k);
+  const tx=x=>(x-X0)*k,ty=y=>(y-Y0)*k;
+  for(const D of DINFO){if(D.n==='Downtown')continue;c.fillStyle=D.col+'22';c.fillRect(tx(D.r.x),ty(D.r.y),D.r.w*k,D.r.h*k)}
+  c.strokeStyle='#ff3d8b';c.lineWidth=3;c.setLineDash([10,6]);c.strokeRect(tx(-40),ty(-40),2090*k,1880*k);c.setLineDash([]);
+  c.textAlign='center';c.textBaseline='middle';
+  const lab=(t,s,x,y,col)=>{c.font=`${Math.max(16,w/42)}px Anton`;c.lineWidth=4;c.strokeStyle='rgba(15,8,32,.9)';c.strokeText(t,x,y);c.fillStyle='#fff';c.fillText(t,x,y);if(s){c.font=`700 ${Math.max(10,w/95)}px "JetBrains Mono"`;c.strokeText(s,x,y+w/45);c.fillStyle=col;c.fillText(s,x,y+w/45)}};
+  lab('PALM HILLS','🎮 PAPER ROUTE',tx(-1300),ty(-500),'#ffd23f');lab('SUNSET HEIGHTS','🎮 HEIGHTS RALLY',tx(1000),ty(-1250),'#21e6c1');
+  lab('HARBOR DISTRICT','🎮 DATA HUNT',tx(1000),ty(2850),'#b892ff');lab('SUNSET BEACH','🎮 BUOY DASH',tx(2400),ty(-300),'#00b4ff');lab('DOWNTOWN ★','MY PORTFOLIO · START HERE',tx(1000),ty(1650),'#ff3d8b');
+  for(const l of LOCS){c.fillStyle=l.color;c.strokeStyle='#120b24';c.lineWidth=2;c.beginPath();c.arc(tx(l.door[0]),ty(l.door[1]),6,0,TAU);c.fill();c.stroke()}
+  for(const m of MISSIONS){c.fillStyle='#ffd23f';c.beginPath();c.arc(tx(m.start[0]),ty(m.start[1]),9,0,TAU);c.fill();c.stroke();c.fillStyle='#120b24';c.font='700 11px Inter';c.fillText('M',tx(m.start[0]),ty(m.start[1])+.5)}
+  c.fillStyle='#fff';c.strokeStyle='#ff3d8b';c.lineWidth=3;c.beginPath();c.arc(tx(P.x),ty(P.y),7,0,TAU);c.fill();c.stroke();
+  cv.onclick=e=>{const r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)/k+X0,my=(e.clientY-r.top)/k+Y0;
+    let best=null,bd=60/k*.5+40;for(const l of LOCS){const dd=Math.hypot(l.door[0]-mx,l.door[1]-my);if(dd<bd){bd=dd;best=l}}
+    if(best){travel(best);return}for(const m of MISSIONS)if(Math.hypot(m.start[0]-mx,m.start[1]-my)<80){travelTo(m.start[0],m.start[1]+30);return}
+    if(!blocked(mx,my,10))travelTo(mx,my);else{const D=DINFO.find(D=>mx>=D.r.x&&mx<D.r.x+D.r.w&&my>=D.r.y&&my<D.r.y+D.r.h);if(D)travelTo(...D.to)}};
+  $('distList').innerHTML=DINFO.map((D,i)=>`<button data-d="${i}" style="--c:${D.col}"><small>${D.sub}</small><b>${D.n}</b>${D.desc}${D.mission?'<br><span style="color:'+D.col+'">🎮 Mission: '+D.mission+'</span>':''}</button>`).join('');
+  $('distList').querySelectorAll('button').forEach(b=>b.onclick=()=>travelTo(...DINFO[+b.dataset.d].to));
+}
 function openMap(){
   if(document.pointerLockElement)document.exitPointerLock();
   $('travelList').innerHTML=LOCS.map(l=>`<button data-go="${l.id}"><i style="background:${l.color}"></i><span>${l.name}<small>${l.sub}${visited.has(l.id)?' · ✓':''}</small></span></button>`).join('');
   $('travelList').querySelectorAll('button').forEach(b=>b.onclick=()=>travel(LOCS.find(l=>l.id===b.dataset.go)));
-  $('mapModal').classList.remove('hidden');keys.clear();
+  $('mapModal').classList.remove('hidden');keys.clear();requestAnimationFrame(drawCityMap);
 }
 function travel(l){closeModals();closePhone();if(drive){stopEngine();parkedCars.push({x:drive.x,y:drive.y,ang:drive.ang,len:drive.len,wid:drive.wid,col:drive.col,mesh:drive.mesh});drive=null;P.g.visible=true}
   P.x=l.door[0];P.y=l.door[1]+8;P.ang=-Math.PI/2;yaw=0;pitch=.32}
+function openPortfolio(){$('welcome').classList.add('hidden');const n=nextLoc();openLoc(n&&visited.size?n.id:'about',true)}
 function openClassic(){
   if(document.pointerLockElement)document.exitPointerLock();
   $('classicBody').innerHTML=ORDER.map(id=>{const s=SECTIONS[id];return `<section><div class="sh">${s.label}</div><h2>${s.title}</h2>${s.html}</section>`}).join('');
@@ -1295,7 +1408,7 @@ const C=h=>new THREE.Color(h);
 const PAL={
  day:{top:C('#2f6fd0'),mid:C('#86b9ef'),hor:C('#ffd9b4'),fog:C('#f1c9b6'),sun:C('#fff0d6'),hemiS:C('#d4e6ff'),hemiG:C('#6b5a4a'),sunI:2.7,hemiI:1.05,exp:1.0},
  sunset:{top:C('#1d0b45'),mid:C('#c2347a'),hor:C('#ff9a5c'),fog:C('#e7788f'),sun:C('#ffb27a'),hemiS:C('#ffa6c9'),hemiG:C('#4a2a5a'),sunI:2.6,hemiI:1.0,exp:1.05},
- night:{top:C('#03020b'),mid:C('#120a30'),hor:C('#3b1d5e'),fog:C('#1c1238'),sun:C('#8c96ff'),hemiS:C('#5b4bb0'),hemiG:C('#120a1e'),sunI:.3,hemiI:.5,exp:.98},
+ night:{top:C('#0b0a28'),mid:C('#2a1d60'),hor:C('#5e3c90'),fog:C('#2e2256'),sun:C('#a8b6ff'),hemiS:C('#8a78e0'),hemiG:C('#2c1a44'),sunI:.8,hemiI:1.0,exp:1.14},
  storm:{top:C('#23222f'),mid:C('#45435a'),hor:C('#77708a'),fog:C('#58546a'),sun:C('#c8c8d8'),hemiS:C('#9a9ab8'),hemiG:C('#2a2633'),sunI:.6,hemiI:.8,exp:.95}};
 const mkP=()=>({top:new THREE.Color(),mid:new THREE.Color(),hor:new THREE.Color(),fog:new THREE.Color(),sun:new THREE.Color(),hemiS:new THREE.Color(),hemiG:new THREE.Color()});
 const pA=mkP(),pB=mkP(),pC=mkP();
@@ -1311,16 +1424,16 @@ function updateEnv(dt){
   ENV.day=day;ENV.night=night;
   let p=mixPal(PAL.sunset,PAL.day,day,pA);p=mixPal(p,PAL.night,night,pB);p=mixPal(p,PAL.storm,rain*.7*(1-night*.5),pC);
   const u=sky.material.uniforms;u.top.value.copy(p.top);u.mid.value.copy(p.mid);u.hor.value.copy(p.hor);u.sunVis.value=(1-night)*(1-rain*.85);u.stars.value=night*(1-rain);
-  scene.fog.color.copy(p.fog);scene.fog.near=70-35*rain;scene.fog.far=300-120*rain-40*night;
+  scene.fog.color.copy(p.fog);scene.fog.near=70-35*rain;scene.fog.far=300-120*rain-20*night;
   sun.color.copy(p.sun);sun.intensity=p.sunI*(1-.6*rain);
   hemi.color.copy(p.hemiS);hemi.groundColor.copy(p.hemiG);hemi.intensity=p.hemiI+flash*3;
   renderer.toneMappingExposure=p.exp+flash*.6;
   const glowK=Math.max(night,rain*.5);
-  for(const m of wallMats)m.emissiveIntensity=1.0+glowK*.7;
+  for(const m of wallMats)m.emissiveIntensity=1.0+glowK*.35;
   for(const m of neonMats)m.color.setScalar(1.6+glowK*.7);
   bulbMat.color.copy(BULB_BASE).multiplyScalar(.6+glowK*1.4);
   poolMat.opacity=glowK*.42;headConeMat.opacity=glowK*.45;
-  bloom.strength=.45+glowK*.22;
+  bloom.strength=.42+glowK*.15;
   if(groundMat){groundMat.roughness=.92-.6*rain;groundMat.metalness=.3*rain}
   envAcc+=dt;if(envAcc>3){envAcc=0;regenEnv()}
 }
@@ -1396,6 +1509,7 @@ function endIntro(){
   $('hud').classList.remove('hidden');sizeMini();
   $('xp').textContent='XP '+String(Math.round(xpShown)).padStart(6,'0');
   if(isTouch)$('hint').textContent='Left: move · Right: look · tap ENTER at glowing rings';
+  if(!DEMO.on)$('welcome').classList.remove('hidden');
 }
 function introCam(dt){
   introT+=dt;const u=ss(0,1,introT/INTRO_LEN);
@@ -1668,10 +1782,99 @@ function missionTick(dt){
   if(done===n)endMission(true);else if(mission.t<=0)endMission(false);
 }
 function missionCard(m){const el=$('locCard'),key='m|'+m.id;if(el.dataset.key!==key){el.dataset.key=key;el.style.setProperty('--c','#ffd23f');
-  el.innerHTML='<div class="lc-k">🎮 MISSION · '+m.district.toUpperCase()+'</div><div class="lc-t">'+m.title+'</div><ul><li>'+m.desc+'</li><li>Time limit: '+fmtT(m.time)+'</li><li>'+(MBEST[m.id]?'Your best: '+fmtT(MBEST[m.id]):'No best time yet')+'</li></ul><div class="lc-h">'+(isTouch?'Tap START':'Press E to start')+'</div>'}
+  el.innerHTML='<div class="lc-k">🎮 BONUS MISSION · '+m.district.toUpperCase()+'</div><div class="lc-t">'+m.title+'</div><ul><li>'+m.desc+'</li><li>Time limit: '+fmtT(m.time)+'</li><li>'+(MBEST[m.id]?'Your best: '+fmtT(MBEST[m.id]):'No best time yet')+'</li></ul><div class="lc-h">'+(isTouch?'Tap START':'Press E to start')+'</div>'}
   el.classList.remove('hidden')}
+
+/* =====================================================================
+   DEMO TOUR (only runs when the URL ends with #demo) — used to record the showcase video
+   ===================================================================== */
+const DEMO={on:false,target:null,route:null,boost:false,hand:false,log:[],t0:0,noCollide:false};
+let CINE=null;
+window.__demo={done:false};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function until(fn,ms=8000){const t=performance.now();while(!fn()&&performance.now()-t<ms)await sleep(40)}
+async function animate(fn,ms){const t=performance.now();for(;;){const k=Math.min(1,(performance.now()-t)/ms);fn(k);if(k>=1)break;await sleep(16)}}
+const walkTo=(x,y)=>{DEMO.target=[x,y];return until(()=>!DEMO.target,7000)};
+const driveRoute=(pts,ms=22000)=>{DEMO.route=pts.slice();return until(()=>!DEMO.route,ms)};
+function demoCaption(a,b){const el=$('demoCap');el.querySelector('b').textContent=a;el.querySelector('i').textContent=b||'';el.classList.remove('show');void el.offsetWidth;el.classList.add('show')}
+function cine(pos,look,ms){CINE={pos:new THREE.CatmullRomCurve3(pos.map(p=>new THREE.Vector3(...p))),look:new THREE.CatmullRomCurve3(look.map(p=>new THREE.Vector3(...p))),len:ms/1000,t:0};return until(()=>!CINE,ms+3000)}
+function cineCam(dt){CINE.t+=dt;const u=ss(0,1,CINE.t/CINE.len);camera.position.copy(CINE.pos.getPointAt(u));camera.lookAt(CINE.look.getPointAt(u));if(CINE.t>=CINE.len)CINE=null}
+const bars=on=>{$('lbTop').classList.toggle('on',on);$('lbBot').classList.toggle('on',on)};
+async function runDemo(){
+  DEMO.on=true;DEMO.noCollide=true;document.body.classList.add('demo');
+  try{localStorage.removeItem('sn_city_visited')}catch(e){}visited.clear();xp=0;xpShown=0;
+  await until(()=>!$('playBtn').disabled,90000);
+  initAudio();
+  const dest=AU.ac.createMediaStreamDestination();AU.master.connect(dest);
+  const chunks=[],rec=new MediaRecorder(dest.stream,{mimeType:'audio/webm;codecs=opus',audioBitsPerSecond:192000});rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};rec.start(500);
+  DEMO.t0=performance.now();window.__demo.t0Epoch=Date.now();
+  await sleep(2600);
+  // 1. intro flyover
+  startIntro();await until(()=>mode==='play',14000);$('hint').style.opacity=0;
+  $('welcome').classList.remove('hidden');await sleep(4200);$('welcome').classList.add('hidden');await sleep(300);
+  // 2. walk into HQ, browse the portfolio
+  demoCaption('Walk into any building','to explore my work');
+  yaw=0;await walkTo(750,962);await sleep(900);
+  openLoc('about');await sleep(2600);
+  document.querySelector('#pTabs [data-s="experience"]').click();await sleep(900);
+  const pb=$('pBody');await animate(k=>{pb.scrollTop=k*Math.min(1400,pb.scrollHeight-pb.clientHeight)},3800);await sleep(500);
+  document.querySelector('#pTabs [data-s="projects"]').click();await sleep(1200);await animate(k=>{pb.scrollTop=k*600},1800);await sleep(400);
+  closeModals();await sleep(1800);
+  // 3. ask me + talk to a local
+  demoCaption('Ask me anything','a conversation in my own voice');
+  askMe();await sleep(2200);document.querySelectorAll('#dlg .dlg-c > *')[0].click();await sleep(5600);window.PF.dialog.close();await sleep(500);
+  const local=npcs.find(n=>n.kind==='chat')||npcs[0];P.x=local.x+28;P.y=local.y+8;yaw=Math.atan2(-Math.cos(Math.PI),-Math.sin(Math.PI));nearNpc=local;await sleep(400);
+  demoCaption('Talk to the locals','everyone has something to say');
+  talkNearest();await sleep(2000);document.querySelectorAll('#dlg .dlg-c > *')[1].click();await sleep(4200);window.PF.dialog.close();await sleep(400);
+  // 4. phone
+  togglePhone();await sleep(1700);phoneApp('radio');await sleep(1700);closePhone();await sleep(400);
+  demoCaption('Five districts, one city','the map shows what each one has');openMap();await sleep(3600);closeModals();await sleep(300);
+  // 5. supercar + time-lapse into a rainy neon night
+  {const pc=parkedCars.find(p=>p.kind==='car');pc.x=640;pc.y=1204;pc.ang=0;pc.mesh.position.set(64,0,120.4);pc.mesh.rotation.y=0;P.x=640;P.y=1172;P.ang=Math.PI/2;yaw=-Math.PI/2;await sleep(600);nearCar=pc;toggleCar();yaw=-Math.PI/2}setStation(2,true);camMode=1;
+  demoCaption('Drive, drift and ride','supercars, bikes, jet skis · live radio');
+  DEMO.boost=true;
+  const tl=animate(k=>{photo.hour=18.35+k*2.9;if(k>.45){weather.target=1;weather.rain=Math.max(weather.rain,(k-.45)*2.2)}},12000);
+  setTimeout(()=>{DEMO.hand=true;setTimeout(()=>DEMO.hand=false,700)},5200);
+  setTimeout(()=>demoCaption('Sunset to neon night','real-time weather, rain and lightning'),6500);
+  setTimeout(()=>{flash=1;sfxThunder()},9800);
+  await driveRoute([[1000,1204],[1640,1204],[1764,1090],[1764,600],[1860,504],[2020,504],[2084,380],[2084,-300],[2084,-900]],14000);
+  await tl;
+  // 6. jet ski
+  weather.target=0;await animate(k=>{weather.rain=Math.max(0,1-k*1.5)},800);
+  drive.mesh.userData.glow&&(drive.mesh.userData.glow.visible=false);parkedCars.push({...drive});drive=null;stopEngine();
+  P.x=2625;P.y=1458;P.g.visible=true;nearCar=parkedCars.find(p=>p.kind==='jetski');toggleCar();setStation(0,true);camMode=0;yaw=-Math.PI/2+.3;
+  await driveRoute([[2720,1580],[2860,1800],[2720,2040],[2900,2300]],8000);
+  // 7. flyover of the new districts
+  stopEngine();AU.phoneRadio=true;bars(true);$('hud').classList.add('hidden');
+  demoCaption('A whole city to explore','suburbs · towers · harbor · beach');
+  await cine([[260,70,330],[150,80,250],[60,75,150],[-60,60,80],[-170,50,40]],[[150,0,260],[100,0,180],[20,0,100],[-110,0,60],[-190,0,20]],9000);
+  bars(false);
+  // 8. a mission
+  if(drive){drive.mesh.visible=false;drive=null}P.g.visible=true;photo.hour=19.6;
+  P.x=500;P.y=1960;yaw=0;camMode=0;$('hud').classList.remove('hidden');AU.phoneRadio=false;await sleep(900);
+  demoCaption('A mission in every district','races, deliveries, scavenger hunts');
+  startMission(MISSIONS[2]);await sleep(2200);const tg=mission.targets[0];P.x=tg.x+30;P.y=tg.y;await sleep(1800);
+  for(const t of mission.targets)if(t.mesh)scene.remove(t.mesh);mission.m.marker.visible=true;$('mhud').classList.add('hidden');mission=null;
+  // 9. photo mode at golden hour
+  P.x=760;P.y=1000;P.ang=-Math.PI/2;yaw=.5;pitch=.25;photo.hour=null;T=0;await sleep(300);
+  demoCaption('Photo mode','freeze the city, frame your shot');
+  openPhoto();photo.hour=18.25;applyFilter('golden');zoomU=1.2;await sleep(1800);
+  const fl=$('shotFlash');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');sfxClick();await sleep(1500);closePhoto();
+  // 10. outro
+  $('hud').classList.add('hidden');bars(true);AU.phoneRadio=true;setStation(0,false);
+  const cs=[...document.querySelectorAll('#cine div')];cs[0].textContent='PLAY IT · SHIVANSHINIGAM.GITHUB.IO/SUNSET-CITY-PORTFOLIO';
+  cs.forEach(x=>x.classList.add('on'));
+  await cine([[90,8,112],[70,30,140]],[[75,4,92],[75,8,80]],5500);
+  await sleep(600);
+  rec.stop();await new Promise(r=>rec.onstop=r);
+  const blob=new Blob(chunks,{type:'audio/webm'});const buf=await blob.arrayBuffer();let bin='';const u8=new Uint8Array(buf);for(let i=0;i<u8.length;i+=8192)bin+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));
+  Object.assign(window.__demo,{audio:btoa(bin),log:DEMO.log,endEpoch:Date.now(),done:true});
+}
 buildPhone();
 $('phoneBtn').onclick=togglePhone;
+$('wPf').onclick=()=>{$('welcome').classList.add('hidden');openPortfolio()};
+$('pfBtn').onclick=openPortfolio;$('helpBtn').onclick=()=>{$('moreMenu').classList.add('hidden');$('welcome').classList.remove('hidden')};
+$('moreBtn').onclick=e=>{e.stopPropagation();$('moreMenu').classList.toggle('hidden')};document.addEventListener('click',e=>{if(!e.target.closest('#moreMenu,#moreBtn'))$('moreMenu').classList.add('hidden')});$('wX').onclick=()=>$('welcome').classList.add('hidden');
 $('phTime').oninput=e=>{photo.hour=+e.target.value};$('phZoom').oninput=e=>{zoomU=+e.target.value};
 document.querySelectorAll('#photoUI [data-f]').forEach(b=>b.onclick=()=>applyFilter(b.dataset.f));
 $('phDof').onclick=()=>{photo.dof=!photo.dof;$('phDof').textContent='Blur background: '+(photo.dof?'on':'off')};
@@ -1681,7 +1884,7 @@ $('phShot').onclick=()=>{photo.shot=true};$('phExit').onclick=closePhoto;applyFi
    BOOT
    ===================================================================== */
 await Promise.race([Promise.all([document.fonts.load('100px Anton'),document.fonts.load('700 20px "JetBrains Mono"')]),new Promise(r=>setTimeout(r,2500))]);
-buildGround();buildOuterGround();buildMountains();buildWater();buildBuildings();buildPalms();buildLamps();buildProps();buildMarkers();buildBenches();
+buildGround();buildOuterGround();buildMountains();buildRoadSigns();buildWater();buildBuildings();buildPalms();buildLamps();buildProps();buildMarkers();buildBenches();
 for(let i=0;i<30;i++)newTraffic(true);
 buildBeachLife();buildMissions();
 for(const [x,y,a,k,col] of [[560,1015,Math.PI/2,'bike','#ff2d6f'],[585,1015,Math.PI/2,'bike','#00e5c7'],[690,1060,0,'car','#ffd23f']]){const m=k==='bike'?makeBikeMesh(col,false):makeCarMesh(46,22,col,false,'super');parkedCars.push({x,y,ang:a,len:k==='bike'?30:46,wid:k==='bike'?10:22,col,mesh:m,kind:k})}
@@ -1701,6 +1904,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+if(location.hash==='#demo')runDemo();
 window.__g={P,get mode(){return mode},cars,renderer};
 </script>
 </body>
