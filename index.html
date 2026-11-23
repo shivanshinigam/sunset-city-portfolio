@@ -164,7 +164,7 @@ button{font:inherit;cursor:pointer}a{color:var(--teal)}
 #mhud{position:absolute;left:50%;top:116px;transform:translateX(-50%);text-align:center;padding:8px 18px;border-radius:12px;background:rgba(15,8,32,.85);border:1px solid var(--c);pointer-events:none;min-width:200px;box-shadow:0 0 24px color-mix(in srgb,var(--c) 40%,transparent)}
 #mhud .mh-t{font:700 11px "JetBrains Mono";letter-spacing:.18em;color:var(--c)}#mhud .mh-p{font-family:Anton;font-size:30px;line-height:1.1}
 #mhud .mh-c{font-family:Anton;font-size:22px}#mhud .mh-c.low{color:#ff3355}#mhud .mh-x{font:700 10px "JetBrains Mono";color:#b9a8d6}
-#demoCap{position:fixed;left:44px;bottom:230px;z-index:28;pointer-events:none;opacity:0}
+#demoCap{position:fixed;left:44px;bottom:230px;z-index:50;pointer-events:none;opacity:0}
 #demoCap.show{animation:dcap 4.4s ease forwards}
 #demoCap b{display:block;font-family:Anton;font-weight:400;font-size:56px;line-height:1.05;color:#fff;text-shadow:3px 3px 0 #ff3d8b,6px 6px 0 #2a0f5c}
 #demoCap i{font-family:Yellowtail;font-style:normal;font-size:36px;color:#ffd1e6;text-shadow:2px 2px 0 #000}
@@ -197,6 +197,15 @@ body.demo #hint{display:none!important}body.demo canvas{cursor:none}
 #welcome .keys{font:700 11px "JetBrains Mono";color:#ffd166;margin:4px 0 10px}
 #welcome{width:360px}
 @media(max-width:700px){#obj{top:auto;bottom:150px;right:10px;max-width:60vw;font-size:12px}}
+#cutFade{position:fixed;inset:0;background:#000;opacity:0;z-index:70;pointer-events:none;transition:opacity .14s}
+#hookText{position:fixed;left:0;right:0;top:40%;text-align:center;z-index:30;pointer-events:none;font-family:Anton;font-size:96px;letter-spacing:.02em;color:#fff;text-shadow:5px 5px 0 #ff3d8b,10px 10px 0 #2a0f5c;opacity:0;transform:scale(.94);transition:opacity .25s,transform .4s}
+#hookText.on{opacity:1;transform:none}
+#endCard{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;opacity:0;transition:opacity 1s;background:radial-gradient(ellipse at center,rgba(15,8,32,.55),rgba(15,8,32,.2) 60%,transparent)}
+#endCard.on{opacity:1}#endCard .ec-k{font:700 16px "JetBrains Mono";letter-spacing:.4em;color:#ffd166}
+#endCard h1{font-family:Anton;font-weight:400;font-size:120px;line-height:1;color:#fff;text-shadow:5px 5px 0 #ff3d8b,10px 10px 0 #2a0f5c;margin:8px 0}
+#endCard .ec-r{font-family:Yellowtail;font-size:52px;color:#ffd1e6;text-shadow:2px 2px 0 #000;margin-bottom:18px}
+#endCard ul{list-style:none;font-size:24px;line-height:1.7;color:#fff;text-shadow:1px 1px 0 #000;margin-bottom:22px}
+#endCard .ec-l{font:700 26px "JetBrains Mono";color:#fff;background:linear-gradient(90deg,#ff3d8b,#ff8a3d);padding:12px 26px;border-radius:12px}
 </style>
 </head>
 <body>
@@ -266,6 +275,10 @@ body.demo #hint{display:none!important}body.demo canvas{cursor:none}
 <div id="photoFrame" class="hidden"><b>SHIVANSHI NIGAM</b><i>AI &amp; Data Engineer · Sunset City</i></div>
 <div id="shotFlash"></div>
 <div id="demoCap"><b></b><i></i></div>
+<div id="cutFade"></div><div id="hookText"></div>
+<div id="endCard"><div class="ec-k">THANKS FOR VISITING</div><h1>SHIVANSHI NIGAM</h1><div class="ec-r">AI &amp; Data Engineer</div>
+<ul><li>AI Engineer @ RightAnswers · GraphRAG over private knowledge graphs</li><li>Lead Engineer &amp; Best Employee @ iplairani</li><li>2 IEEE papers · RAG · Agents · Knowledge Graphs</li></ul>
+<div class="ec-l">shivanshinigam.github.io/sunset-city-portfolio</div></div>
 <div id="panel" class="modal hidden"><div class="card" id="panelCard">
   <header><small id="pLabel"></small><h2 id="pTitle"></h2><button class="closebtn" data-close aria-label="Close">✕</button></header>
   <nav class="tabs" id="pTabs"></nav><div class="body" id="pBody"></div></div></div>
@@ -1331,6 +1344,7 @@ function updatePrompt(){
   const ab=$('actBtn');ab.style.display=isTouch&&((nearLoc||nearNpc)&&!drive||(nearMission&&!mission))?'block':'none';ab.textContent=nearMission&&!mission?'START':nearLoc?'ENTER':'TALK';
   const cb=$('carBtn');cb.style.display=isTouch&&(drive||nearCar)?'block':'none';cb.textContent=drive?'EXIT':'🚗 IN';
 }
+$('toast').addEventListener('animationend',()=>$('toast').classList.remove('show'));
 function toast(a,b,c){const el=$('toast');el.querySelector('.t1').textContent=a;el.querySelector('.t2').textContent=b;el.querySelector('.t3').textContent=c||'';el.classList.remove('show');void el.offsetWidth;el.classList.add('show')}
 let fresh=null;
 function openLoc(id,silent){
@@ -1806,69 +1820,81 @@ const bars=on=>{$('lbTop').classList.toggle('on',on);$('lbBot').classList.toggle
 async function runDemo(){
   DEMO.on=true;DEMO.noCollide=true;document.body.classList.add('demo');
   try{localStorage.removeItem('sn_city_visited')}catch(e){}visited.clear();xp=0;xpShown=0;
-  await until(()=>!$('playBtn').disabled,90000);
-  initAudio();
+  await until(()=>!$('playBtn').disabled&&window.__xbReady!==undefined,120000);
+  initAudio();initAmbience();
   const dest=AU.ac.createMediaStreamDestination();AU.master.connect(dest);
-  const chunks=[],rec=new MediaRecorder(dest.stream,{mimeType:'audio/webm;codecs=opus',audioBitsPerSecond:192000});rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};rec.start(500);
-  DEMO.t0=performance.now();window.__demo.t0Epoch=Date.now();
-  await sleep(2600);
-  // 1. intro flyover
-  startIntro();await until(()=>mode==='play',14000);$('hint').style.opacity=0;
-  $('welcome').classList.remove('hidden');await sleep(4200);$('welcome').classList.add('hidden');await sleep(300);
-  // 2. walk into HQ, browse the portfolio
-  demoCaption('Walk into any building','to explore my work');
-  yaw=0;await walkTo(750,962);await sleep(900);
-  openLoc('about');await sleep(2600);
-  document.querySelector('#pTabs [data-s="experience"]').click();await sleep(900);
-  const pb=$('pBody');await animate(k=>{pb.scrollTop=k*Math.min(1400,pb.scrollHeight-pb.clientHeight)},3800);await sleep(500);
-  document.querySelector('#pTabs [data-s="projects"]').click();await sleep(1200);await animate(k=>{pb.scrollTop=k*600},1800);await sleep(400);
+  const chunks=[],rec=new MediaRecorder(dest.stream,{mimeType:'audio/webm;codecs=opus',audioBitsPerSecond:192000});rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  // helpers
+  const fade=$('cutFade');
+  const cut=async(fn,hold=140)=>{fade.style.opacity=1;await sleep(hold);await fn();await sleep(60);fade.style.opacity=0};
+  const hook=(t,on)=>{const h=$('hookText');h.textContent=t||'';h.classList.toggle('on',!!on)};
+  const park=()=>{if(drive){stopEngine();if(drive.mesh.userData.glow)drive.mesh.userData.glow.visible=false;if(drive.kind!=='car'&&drive.mesh.userData.meRider)drive.mesh.userData.meRider.visible=false;parkedCars.push({x:drive.x,y:drive.y,ang:drive.ang,len:drive.len,wid:drive.wid,col:drive.col,mesh:drive.mesh,kind:drive.kind});drive=null}P.g.visible=true;DEMO.route=null};
+  const ride=(pc,x,y,ang)=>{pc.x=x;pc.y=y;pc.ang=ang;pc.mesh.position.set(x*S,0,y*S);pc.mesh.rotation.y=-ang;P.x=x;P.y=y-30;nearCar=pc;toggleCar();yaw=Math.atan2(-Math.cos(ang),-Math.sin(ang))};
+  const setTime=(h,rain=0)=>{photo.hour=h;weather.target=rain;weather.rain=rain;envAcc=99};
+  const hookCar=makeCarMesh(46,22,'#ff2d6f',false,'super');const hc={x:0,y:0,ang:0,len:46,wid:22,col:'#ff2d6f',mesh:hookCar,kind:'car'};parkedCars.push(hc);
+  const bikeM=makeBikeMesh('#00e5c7',false);const bk={x:0,y:0,ang:0,len:30,wid:10,col:'#00e5c7',mesh:bikeM,kind:'bike'};parkedCars.push(bk);
+  const js=parkedCars.find(p=>p.kind==='jetski'),sc=parkedCars.find(p=>p.kind==='car'&&p!==hc);
+  // ---------- HOOK ----------
+  mode='play';$('title').classList.add('hidden');$('hud').classList.add('hidden');fade.style.opacity=1;
+  setTime(21.3,.8);ride(hc,200,1204,0);camMode=1;DEMO.boost=true;DEMO.route=[[1100,1204],[1700,1204]];setStation(2,false);AU.phoneRadio=true;
+  await sleep(700);rec.start(500);DEMO.t0=performance.now();window.__demo.t0Epoch=Date.now();
+  fade.style.opacity=0;bars(true);hook('WHAT IF A PORTFOLIO',true);await sleep(800);DEMO.hand=true;await sleep(1000);DEMO.hand=false;
+  await cut(()=>{park();setTime(18.4,0);ride(js,2625,1505,Math.PI/2);camMode=0;DEMO.route=[[2760,1760],[2700,2100]];hook('WAS AN OPEN WORLD?',true)});
+  await sleep(1700);
+  await cut(()=>{park();hook('',false);P.x=760;P.y=1000});
+  await cine([[205,34,150],[150,46,140],[100,40,128]],[[110,6,90],[90,4,80],[76,3,96]],2600);
+  // ---------- TITLE ----------
+  const cs=[...document.querySelectorAll('#cine div')];cs[0].textContent='WELCOME TO SUNSET CITY';cs.forEach(x=>x.classList.add('on'));
+  await cine([[100,40,128],[78,8,108]],[[76,3,96],[75,2,96]],3400);
+  cs.forEach(x=>x.classList.remove('on'));bars(false);AU.phoneRadio=false;
+  // ---------- PORTFOLIO ----------
+  setTime(18.35,0);P.x=750;P.y=1010;P.ang=-Math.PI/2;yaw=0;pitch=.36;camMode=0;$('hud').classList.remove('hidden');sizeMini();DEMO.boost=false;
+  $('welcome').classList.remove('hidden');demoCaption('Everything about me','lives Downtown');await sleep(3600);$('welcome').classList.add('hidden');
+  await walkTo(750,962);await sleep(500);
+  const pb=$('pBody'),tab=id=>document.querySelector('#pTabs [data-s="'+id+'"]').click(),toEl=async(id,ms=900)=>{const el=$(id);if(!el)return;const t=pb.scrollTop+el.getBoundingClientRect().top-pb.getBoundingClientRect().top-10,s0=pb.scrollTop;await animate(k=>{pb.scrollTop=s0+(t-s0)*k},ms)};
+  openLoc('about');demoCaption('About me','AI & Data Engineer · GenAI · RAG · Agents');await sleep(3800);
+  tab('experience');demoCaption('Now: AI Engineer at RightAnswers','GraphRAG over private knowledge graphs');await sleep(800);await toEl('role-ra',700);$('role-ra').classList.add('focus');await sleep(3800);
+  await animate(k=>{pb.scrollTop+=2.2},1400);
+  demoCaption('Lead Engineer · Best Employee','iplairani.com · RAG, Snowflake, Databricks, AWS');await toEl('role-ip',900);$('role-ip').classList.add('focus');await sleep(3600);
+  tab('projects');demoCaption('9 featured projects','agents · RAG · evals · vision');await sleep(3200);await animate(k=>{pb.scrollTop=k*520},1500);await sleep(1600);
+  tab('publications');demoCaption('Research','two IEEE papers in 2025');await sleep(2600);
+  tab('skills');demoCaption('Skills','AI/ML · data · cloud · backend');await sleep(2400);
+  tab('contact');demoCaption("Let's talk",'email · LinkedIn · GitHub');await sleep(2200);
   closeModals();await sleep(1800);
-  // 3. ask me + talk to a local
-  demoCaption('Ask me anything','a conversation in my own voice');
-  askMe();await sleep(2200);document.querySelectorAll('#dlg .dlg-c > *')[0].click();await sleep(5600);window.PF.dialog.close();await sleep(500);
-  const local=npcs.find(n=>n.kind==='chat')||npcs[0];P.x=local.x+28;P.y=local.y+8;yaw=Math.atan2(-Math.cos(Math.PI),-Math.sin(Math.PI));nearNpc=local;await sleep(400);
-  demoCaption('Talk to the locals','everyone has something to say');
-  talkNearest();await sleep(2000);document.querySelectorAll('#dlg .dlg-c > *')[1].click();await sleep(4200);window.PF.dialog.close();await sleep(400);
-  // 4. phone
-  togglePhone();await sleep(1700);phoneApp('radio');await sleep(1700);closePhone();await sleep(400);
-  demoCaption('Five districts, one city','the map shows what each one has');openMap();await sleep(3600);closeModals();await sleep(300);
-  // 5. supercar + time-lapse into a rainy neon night
-  {const pc=parkedCars.find(p=>p.kind==='car');pc.x=640;pc.y=1204;pc.ang=0;pc.mesh.position.set(64,0,120.4);pc.mesh.rotation.y=0;P.x=640;P.y=1172;P.ang=Math.PI/2;yaw=-Math.PI/2;await sleep(600);nearCar=pc;toggleCar();yaw=-Math.PI/2}setStation(2,true);camMode=1;
-  demoCaption('Drive, drift and ride','supercars, bikes, jet skis · live radio');
-  DEMO.boost=true;
-  const tl=animate(k=>{photo.hour=18.35+k*2.9;if(k>.45){weather.target=1;weather.rain=Math.max(weather.rain,(k-.45)*2.2)}},12000);
-  setTimeout(()=>{DEMO.hand=true;setTimeout(()=>DEMO.hand=false,700)},5200);
-  setTimeout(()=>demoCaption('Sunset to neon night','real-time weather, rain and lightning'),6500);
-  setTimeout(()=>{flash=1;sfxThunder()},9800);
-  await driveRoute([[1000,1204],[1640,1204],[1764,1090],[1764,600],[1860,504],[2020,504],[2084,380],[2084,-300],[2084,-900]],14000);
-  await tl;
-  // 6. jet ski
-  weather.target=0;await animate(k=>{weather.rain=Math.max(0,1-k*1.5)},800);
-  drive.mesh.userData.glow&&(drive.mesh.userData.glow.visible=false);parkedCars.push({...drive});drive=null;stopEngine();
-  P.x=2625;P.y=1458;P.g.visible=true;nearCar=parkedCars.find(p=>p.kind==='jetski');toggleCar();setStation(0,true);camMode=0;yaw=-Math.PI/2+.3;
-  await driveRoute([[2720,1580],[2860,1800],[2720,2040],[2900,2300]],8000);
-  // 7. flyover of the new districts
-  stopEngine();AU.phoneRadio=true;bars(true);$('hud').classList.add('hidden');
-  demoCaption('A whole city to explore','suburbs · towers · harbor · beach');
-  await cine([[260,70,330],[150,80,250],[60,75,150],[-60,60,80],[-170,50,40]],[[150,0,260],[100,0,180],[20,0,100],[-110,0,60],[-190,0,20]],9000);
-  bars(false);
-  // 8. a mission
-  if(drive){drive.mesh.visible=false;drive=null}P.g.visible=true;photo.hour=19.6;
-  P.x=500;P.y=1960;yaw=0;camMode=0;$('hud').classList.remove('hidden');AU.phoneRadio=false;await sleep(900);
-  demoCaption('A mission in every district','races, deliveries, scavenger hunts');
-  startMission(MISSIONS[2]);await sleep(2200);const tg=mission.targets[0];P.x=tg.x+30;P.y=tg.y;await sleep(1800);
-  for(const t of mission.targets)if(t.mesh)scene.remove(t.mesh);mission.m.marker.visible=true;$('mhud').classList.add('hidden');mission=null;
-  // 9. photo mode at golden hour
-  P.x=760;P.y=1000;P.ang=-Math.PI/2;yaw=.5;pitch=.25;photo.hour=null;T=0;await sleep(300);
-  demoCaption('Photo mode','freeze the city, frame your shot');
-  openPhoto();photo.hour=18.25;applyFilter('golden');zoomU=1.2;await sleep(1800);
-  const fl=$('shotFlash');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');sfxClick();await sleep(1500);closePhoto();
-  // 10. outro
-  $('hud').classList.add('hidden');bars(true);AU.phoneRadio=true;setStation(0,false);
-  const cs=[...document.querySelectorAll('#cine div')];cs[0].textContent='PLAY IT · SHIVANSHINIGAM.GITHUB.IO/SUNSET-CITY-PORTFOLIO';
-  cs.forEach(x=>x.classList.add('on'));
-  await cine([[90,8,112],[70,30,140]],[[75,4,92],[75,8,80]],5500);
-  await sleep(600);
+  // ---------- GUIDANCE + TALK ----------
+  demoCaption('Follow the marker','every glowing building is part of my work');
+  P.x=1150;P.y=1015;yaw=.4;await sleep(300);await walkTo(1340,990);await sleep(900);
+  askMe();demoCaption('Ask me anything','a conversation, right in the game');await sleep(1500);document.querySelectorAll('#dlg .dlg-c > *')[1].click();await sleep(4600);window.PF.dialog.close();
+  const local=npcs.find(n=>n.kind==='chat'&&n.x>0&&n.x<2000&&n.y>0&&n.y<1800)||npcs[0];P.x=local.x+26;P.y=local.y+10;nearNpc=local;await sleep(300);
+  talkNearest();demoCaption('Locals point the way','and gossip about my RAG pipelines');await sleep(1600);document.querySelectorAll('#dlg .dlg-c > *')[0].click();await sleep(3400);window.PF.dialog.close();
+  // ---------- CITY IN DAYLIGHT ----------
+  await cut(()=>{setTime(15.8,0);openMap();demoCaption('One city, five districts','the map shows what each one has')});await sleep(3200);closeModals();
+  await cut(()=>{ride(bk,330,456,Math.PI);camMode=1;setStation(0,true);DEMO.boost=true;DEMO.route=[[-300,456],[-1000,456],[-1700,456]];demoCaption('Ride through Palm Hills','bikes, supercars, jet skis')});
+  await sleep(6200);
+  await cut(()=>{park();$('hud').classList.add('hidden');bars(true);demoCaption('Harbor District','containers, cranes, a data hunt')});
+  await cine([[105,28,330],[150,20,292],[175,26,262]],[[140,4,265],[160,6,250],[162,10,230]],4200);
+  await cut(()=>{demoCaption('Sunset Heights','towers and a lake park')});
+  await cine([[30,40,-80],[75,34,-90],[115,40,-100]],[[75,0,-126],[75,0,-126],[75,0,-126]],3600);
+  await cut(()=>{bars(false);$('hud').classList.remove('hidden');setTime(17.6,0);ride(js,2625,1505,Math.PI/2);camMode=1;DEMO.route=[[2760,1700],[2950,1950],[2800,2250]];demoCaption('Sunset Beach','yachts, jet skis, the pier')});
+  await sleep(4400);
+  // ---------- MISSION ----------
+  await cut(()=>{park();P.x=500;P.y=1960;yaw=0;pitch=.34;camMode=0;setTime(17.2,0)});await sleep(600);
+  demoCaption('A mission in every district','this one: recover the lost training data');startMission(MISSIONS[2]);await sleep(2200);
+  for(const t of mission.targets){P.x=t.x+20;P.y=t.y;await sleep(380);if(!mission)break}
+  await sleep(3000);
+  // ---------- NIGHT ----------
+  await cut(()=>{ride(sc,640,1204,0);camMode=1;setStation(2,true);DEMO.boost=true;setTime(18.6,0);demoCaption('Sunset to neon night','real-time weather, rain and lightning')});
+  const tl=animate(k=>{photo.hour=18.6+k*2.7;if(k>.4){weather.target=1;weather.rain=Math.max(weather.rain,(k-.4)*2)}},9500);
+  setTimeout(()=>{DEMO.hand=true;setTimeout(()=>DEMO.hand=false,700)},4600);setTimeout(()=>{flash=1;sfxThunder()},8200);
+  await driveRoute([[1000,1204],[1640,1204],[1764,1090],[1764,600],[1860,504],[2020,504],[2084,380],[2084,-300]],10500);await tl;
+  // ---------- PHOTO MODE ----------
+  await cut(()=>{park();setTime(18.3,0);P.x=760;P.y=1000;P.ang=-Math.PI/2;yaw=.5;pitch=.25;camMode=0});await sleep(400);
+  openPhoto();photo.hour=18.25;applyFilter('golden');zoomU=1.2;demoCaption('Photo mode','freeze the city, frame your shot');await sleep(1800);
+  {const fl=$('shotFlash');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');sfxClick()}await sleep(1300);closePhoto();
+  // ---------- END CARD ----------
+  $('hud').classList.add('hidden');bars(true);setTime(21,0);AU.phoneRadio=true;setStation(0,false);$('endCard').classList.add('on');
+  await cine([[60,30,150],[80,44,170]],[[75,6,95],[75,8,90]],6500);
+  await sleep(500);
   rec.stop();await new Promise(r=>rec.onstop=r);
   const blob=new Blob(chunks,{type:'audio/webm'});const buf=await blob.arrayBuffer();let bin='';const u8=new Uint8Array(buf);for(let i=0;i<u8.length;i+=8192)bin+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));
   Object.assign(window.__demo,{audio:btoa(bin),log:DEMO.log,endEpoch:Date.now(),done:true});
