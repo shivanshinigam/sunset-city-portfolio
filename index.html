@@ -1149,7 +1149,7 @@ function update(dt){
     if(drive){
       let target=null;
       if(joy.active){const m=Math.hypot(joy.x,joy.y);if(m>.2){const wx=fw.x*-joy.y+rt.x*joy.x,wy=fw.y*-joy.y+rt.y*joy.x;target={a:Math.atan2(wy,wx),m}}}
-      if(DEMO.route&&DEMO.route.length){const [x,y]=DEMO.route[0],tx=x-P.x,ty=y-P.y;if(Math.hypot(tx,ty)<50){DEMO.route.shift();if(!DEMO.route.length)DEMO.route=null}else target={a:Math.atan2(ty,tx),m:1}}
+      if(DEMO.route&&DEMO.route.length){const [x,y]=DEMO.route[0],tx=x-P.x,ty=y-P.y,dd=Math.hypot(tx,ty);if(dd<45){DEMO.route.shift();if(!DEMO.route.length)DEMO.route=null}else{let m=1;const sp=Math.hypot(drive.vx,drive.vy),nx=DEMO.route[1];if(nx){const a1=Math.atan2(ty,tx),a2=Math.atan2(nx[1]-y,nx[0]-x),turn=Math.abs(((a2-a1+Math.PI)%TAU+TAU)%TAU-Math.PI);if(turn>.35&&dd<60+sp*.55&&sp>170)m=-.9}target={a:Math.atan2(ty,tx),m}}}
       updateDrive(dt,fx,sx,target);
     }else{
       let ix=fx-joy.y,iy=sx+joy.x;let m=Math.hypot(ix,iy);if(m>1){ix/=m;iy/=m;m=1}
@@ -1836,17 +1836,18 @@ async function runDemo(){
   const js=parkedCars.find(p=>p.kind==='jetski'),sc=parkedCars.find(p=>p.kind==='car'&&p!==hc);
   // ---------- HOOK ----------
   mode='play';$('title').classList.add('hidden');$('hud').classList.add('hidden');fade.style.opacity=1;
+  const marks=on=>{for(const m of MISSIONS)m.marker.visible=on;for(const mk of markers)mk.ring.parent&&(mk.ring.visible=on)};marks(false);
   setTime(21.3,.8);ride(hc,200,1204,0);camMode=1;DEMO.boost=true;DEMO.route=[[1100,1204],[1700,1204]];setStation(2,false);AU.phoneRadio=true;
   await sleep(700);rec.start(500);DEMO.t0=performance.now();window.__demo.t0Epoch=Date.now();
   fade.style.opacity=0;bars(true);hook('WHAT IF A PORTFOLIO',true);await sleep(800);DEMO.hand=true;await sleep(1000);DEMO.hand=false;
-  await cut(()=>{park();setTime(18.4,0);ride(js,2625,1505,Math.PI/2);camMode=0;DEMO.route=[[2760,1760],[2700,2100]];hook('WAS AN OPEN WORLD?',true)});
+  await cut(()=>{park();{for(let i=parkedCars.length-1;i>=0;i--)if(parkedCars[i].mesh===hookCar)parkedCars.splice(i,1);scene.remove(hookCar)}setTime(18.4,0);ride(js,2625,1505,Math.PI/2);camMode=0;DEMO.route=[[2760,1760],[2700,2100]];hook('WAS AN OPEN WORLD?',true)});
   await sleep(1700);
   await cut(()=>{park();hook('',false);P.x=760;P.y=1000});
   await cine([[205,34,150],[150,46,140],[100,40,128]],[[110,6,90],[90,4,80],[76,3,96]],2600);
   // ---------- TITLE ----------
   const cs=[...document.querySelectorAll('#cine div')];cs[0].textContent='WELCOME TO SUNSET CITY';cs.forEach(x=>x.classList.add('on'));
   await cine([[100,40,128],[78,8,108]],[[76,3,96],[75,2,96]],3400);
-  cs.forEach(x=>x.classList.remove('on'));bars(false);AU.phoneRadio=false;
+  cs.forEach(x=>x.classList.remove('on'));bars(false);AU.phoneRadio=false;marks(true);
   // ---------- PORTFOLIO ----------
   setTime(18.35,0);P.x=750;P.y=1010;P.ang=-Math.PI/2;yaw=0;pitch=.36;camMode=0;$('hud').classList.remove('hidden');sizeMini();DEMO.boost=false;
   $('welcome').classList.remove('hidden');demoCaption('Everything about me','lives Downtown');await sleep(3600);$('welcome').classList.add('hidden');
@@ -1883,10 +1884,10 @@ async function runDemo(){
   for(const t of mission.targets){P.x=t.x+20;P.y=t.y;await sleep(380);if(!mission)break}
   await sleep(3000);
   // ---------- NIGHT ----------
-  await cut(()=>{ride(sc,640,1204,0);camMode=1;setStation(2,true);DEMO.boost=true;setTime(18.6,0);demoCaption('Sunset to neon night','real-time weather, rain and lightning')});
+  await cut(()=>{ride(sc,640,1204,0);camMode=1;setStation(2,true);DEMO.boost=false;setTime(18.6,0);demoCaption('Sunset to neon night','real-time weather, rain and lightning')});
   const tl=animate(k=>{photo.hour=18.6+k*2.7;if(k>.4){weather.target=1;weather.rain=Math.max(weather.rain,(k-.4)*2)}},9500);
   setTimeout(()=>{DEMO.hand=true;setTimeout(()=>DEMO.hand=false,700)},4600);setTimeout(()=>{flash=1;sfxThunder()},8200);
-  await driveRoute([[1000,1204],[1640,1204],[1764,1090],[1764,600],[1860,504],[2020,504],[2084,380],[2084,-300]],10500);await tl;
+  await driveRoute([[1000,1204],[1560,1204],[1690,1206],[1752,1168],[1764,1060],[1764,600],[1800,520],[1900,504],[2020,504],[2084,430],[2084,-300]],10500);await tl;
   // ---------- PHOTO MODE ----------
   await cut(()=>{park();setTime(18.3,0);P.x=760;P.y=1000;P.ang=-Math.PI/2;yaw=.5;pitch=.25;camMode=0});await sleep(400);
   openPhoto();photo.hour=18.25;applyFilter('golden');zoomU=1.2;demoCaption('Photo mode','freeze the city, frame your shot');await sleep(1800);
